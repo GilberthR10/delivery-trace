@@ -11,23 +11,25 @@
       </button>
       <p>Información del servicio</p>
     </div>
-    <TracePointMapbox
-      :contact="contact"
-      :locations="locations"
-      :guide="guide"
-      :order="order"
-      :marker1="marker1"
-      :marker2="marker2"
-      :date="date"
-    />
-    <trace-point
-      v-for="(item, i) in trace"
-      :key="i"
-      :status="item.status"
-      :date="item.date"
-      :locations="locations"
-      :evidence="evidence"
-    />
+    <template v-if="response">
+      <TracePointMapbox
+        :contact="contact"
+        :locations="locations"
+        :guide="guide"
+        :order="order"
+        :marker1="marker1"
+        :marker2="marker2"
+        :date="date"
+      />
+      <trace-point
+        v-for="(item, i) in trace"
+        :key="i"
+        :status="item.status"
+        :date="item.date"
+        :locations="locations"
+        :evidence="evidence"
+      />
+    </template>
   </div>
 </template>
 
@@ -37,6 +39,19 @@ import TracePointMapbox from "@/components/TracePointMapbox.vue";
 import ArrowBack from "@/components/icons/ArrowBack.vue";
 import { onUpdated } from "vue";
 import useTraceability from "@/composables/traceability";
+import { useRoute, useRouter } from "vue-router";
+const route = useRoute();
+const router = useRouter();
+
+const { email, codigo } = route.params;
+const { getTraceability } = useTraceability();
+
+const { response, status, message } = await getTraceability(email, codigo);
+if (!status) {
+  router.push({
+    name: "NotFound",
+  });
+}
 
 onUpdated(() => {
   const lines = document.getElementsByClassName("line-trace");
@@ -48,9 +63,6 @@ onUpdated(() => {
   ].style.visibility = "hidden";
 });
 
-const { getTraceability } = useTraceability();
-
-const response = await getTraceability();
 const {
   contact,
   date,

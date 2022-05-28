@@ -1,7 +1,7 @@
 
 import mapboxgl from 'mapbox-gl';
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiZ2lsYmVydGhyciIsImEiOiJjbDNudnU3a2QwaW42M3BtOW1ocTE0bHczIn0.kNn2nDKMWHeg0X4ugMptxQ';
+mapboxgl.accessToken = import.meta.env.VITE_ACCESS_TOKEN_MAP;
 
 //*  @elemnt String id html container
 //*  @center Array [-long,lat]
